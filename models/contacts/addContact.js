@@ -3,9 +3,9 @@ const readList = require("./readList");
 const crypto = require("crypto");
 const contactsPath = require("./contactsPath");
 
-async function addContact(name, email, phone) {
+async function addContact(data) {
   const contacts = await readList();
-  const newContact = { id: crypto.randomUUID(), name, email, phone };
+  const newContact = { id: crypto.randomUUID(), ...data };
 
   contacts.push(newContact);
 

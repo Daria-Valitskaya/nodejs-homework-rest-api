@@ -1,69 +1,109 @@
 const express = require("express");
+const { NotFound, BadRequest } = require("http-errors");
+const joiSchema = require("../../joiValidation/validation");
+
 const router = express.Router();
+
 const {
   listContacts,
   getContactById,
   removeContact,
   addContact,
-  readList,
+  updateContactById,
 } = require("../../models/contacts");
 
 router.get("/", async (req, res, next) => {
   try {
     const result = await listContacts();
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      code: 500,
-      message: "Server error",
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      },
     });
+  } catch (error) {
+    next(error);
   }
 });
 
 router.get("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { contactId } = req.params;
+    const result = await getContactById(contactId);
+    if (!result) {
+      throw new NotFound(`Contact ${contactId} not found`);
+    }
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { error } = joiSchema.validate(req.body);
+    if (error) {
+      throw new BadRequest(error.message);
+    }
+    const result = await addContact(req.body);
+    console.log(result);
+    res.status(201).json({
+      status: "success",
+      code: 201,
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { contactId } = req.params;
+    const result = await removeContact(contactId);
+    if (!result) {
+      throw new NotFound(`Contact ${contactId} not found`);
+    }
+    res.json({
+      status: "success",
+      code: 200,
+      message: "contact deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
 });
-
-router.patch("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+//не работает
+router.put("/:contactId", async (req, res, next) => {
+  try {
+    const { error } = joiSchema.validate(req.body);
+    if (error) {
+      throw new BadRequest(error.message);
+    }
+    const { contactId } = req.params;
+    const result = await updateContactById(contactId, req.body);
+    if (!result) {
+      throw new NotFound(`Contact ${contactId} not found`);
+    }
+    res.status(201).json({
+      status: "success",
+      code: 200,
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
-
-// @ GET /api/contacts
-// ничего не получает
-// вызывает функцию listContacts для работы с json-файлом contacts.json
-// возвращает массив всех контактов в json-формате со статусом 200
-// @ GET /api/contacts/:contactId
-// Не получает body
-// Получает параметр contactId
-// вызывает функцию getById для работы с json-файлом contacts.json
-// если такой id есть, возвращает обьект контакта в json-формате со статусом 200
-// если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
-// @ POST /api/contacts
-// Получает body в формате {name, email, phone}
-// Если в body нет каких-то обязательных полей, возвращает json с ключом {"message": "missing required name field"} и статусом 400
-// Если с body все хорошо, добавляет уникальный идентификатор в объект контакта
-// Вызывает функцию addContact(body) для сохранения контакта в файле contacts.json
-// По результату работы функции возвращает объект с добавленным id {id, name, email, phone} и статусом 201
-// @ DELETE /api/contacts/:contactId
-// Не получает body
-// Получает параметр contactId
-// вызывает функцию removeContact для работы с json-файлом contacts.json
-// если такой id есть, возвращает json формата {"message": "contact deleted"} и статусом 200
-// если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
-// @ PUT /api/contacts/:contactId
-// Получает параметр contactId
-// Получает body в json-формате c обновлением любых полей name, email и phone
-// Если body нет, возвращает json с ключом {"message": "missing fields"} и статусом 400
-// Если с body все хорошо, вызывает функцию updateContact(contactId, body) (напиши ее) для обновления контакта в файле contacts.json
-// По результату работы функции возвращает обновленный объект контакта и статусом 200. В противном случае, возвращает json с ключом "message": "Not found" и статусом 404
