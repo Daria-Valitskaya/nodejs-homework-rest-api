@@ -9,8 +9,12 @@ const {
 } = require("../../models/contacts");
 
 router.get("/", async (req, res, next) => {
-  const contacts = await listContacts();
-  res.json(contacts);
+  try {
+    const result = await listContacts();
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.get("/:contactId", async (req, res, next) => {
