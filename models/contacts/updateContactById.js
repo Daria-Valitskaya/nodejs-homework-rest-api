@@ -11,8 +11,9 @@ async function updateContactById(contactId, body) {
     return null;
   }
 
-  contacts[idx] = { contactId, ...body };
+  const brandNewContact = { ...contacts[idx], ...body };
+  contacts[idx] = brandNewContact;
   await updateContacts(contacts);
-  return contacts[idx];
+  return brandNewContact;
 }
 module.exports = updateContactById;

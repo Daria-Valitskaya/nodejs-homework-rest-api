@@ -53,7 +53,6 @@ router.post("/", async (req, res, next) => {
       throw new BadRequest(error.message);
     }
     const result = await addContact(req.body);
-    console.log(result);
     res.status(201).json({
       status: "success",
       code: 201,
@@ -82,7 +81,6 @@ router.delete("/:contactId", async (req, res, next) => {
     next(error);
   }
 });
-//не работает
 router.put("/:contactId", async (req, res, next) => {
   try {
     const { error } = joiSchema.validate(req.body);
