@@ -1,7 +1,7 @@
 const readList = require("./readList");
 
 async function listContacts() {
-  return await readList();
+  return readList();
 }
 
 module.exports = listContacts;

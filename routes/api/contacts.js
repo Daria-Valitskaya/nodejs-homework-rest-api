@@ -1,6 +1,6 @@
 const express = require("express");
 const { NotFound, BadRequest } = require("http-errors");
-const joiSchema = require("../../joiValidation/validation");
+const { validation, validationOnChangeFields } = require("../../joiValidation");
 
 const router = express.Router();
 
@@ -48,7 +48,7 @@ router.get("/:contactId", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { error } = joiSchema.validate(req.body);
+    const { error } = validation.validate(req.body);
     if (error) {
       throw new BadRequest(error.message);
     }
@@ -83,7 +83,7 @@ router.delete("/:contactId", async (req, res, next) => {
 });
 router.put("/:contactId", async (req, res, next) => {
   try {
-    const { error } = joiSchema.validate(req.body);
+    const { error } = validationOnChangeFields.validate(req.body);
     if (error) {
       throw new BadRequest(error.message);
     }

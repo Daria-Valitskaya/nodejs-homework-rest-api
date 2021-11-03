@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const joiSchema = Joi.object({
+const validation = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -7,4 +7,4 @@ const joiSchema = Joi.object({
   phone: Joi.string().required(),
 });
 
-module.exports = joiSchema;
+module.exports = validation;

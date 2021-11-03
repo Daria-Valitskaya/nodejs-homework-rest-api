@@ -1,7 +1,6 @@
-const fs = require("fs/promises");
 const readList = require("./readList");
 const crypto = require("crypto");
-const contactsPath = require("./contactsPath");
+const updateContacts = require("./updateContacts");
 
 async function addContact(data) {
   const contacts = await readList();
@@ -9,7 +8,8 @@ async function addContact(data) {
 
   contacts.push(newContact);
 
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+  await updateContacts(contacts);
+
   return newContact;
 }
 
