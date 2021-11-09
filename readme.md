@@ -31,4 +31,5 @@
 - `npm lint:fix` &mdash; та же проверка линтера, но с автоматическими исправлениями простых ошибок
 
   user daria_valitskaya
-  password mcF6NIjkuwXTFzMK
+  password UlrZnmpfQiBHxeR0
+  mongodb+srv://daria_valitskaya:UlrZnmpfQiBHxeR0@cluster0.fqxue.mongodb.net/notebook?retryWrites=true&w=majority
