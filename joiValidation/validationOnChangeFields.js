@@ -9,6 +9,7 @@ const joiSchemaOneField = Joi.object({
     .optional(),
 
   phone: Joi.string().optional(),
-}).or("name", "email", "phone");
+  favorite: Joi.boolean(),
+}).or("name", "email", "phone", "favorite");
 
 module.exports = joiSchemaOneField;
