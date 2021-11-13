@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const joiSchemaOneField = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).optional(),
+  name: Joi.string().min(3).max(30).optional(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
@@ -9,6 +9,7 @@ const joiSchemaOneField = Joi.object({
     .optional(),
 
   phone: Joi.string().optional(),
-}).or("name", "email", "phone");
+  favorite: Joi.boolean(),
+}).or("name", "email", "phone", "favorite");
 
 module.exports = joiSchemaOneField;

@@ -1,7 +1,9 @@
 const validationOnChangeFields = require("./validationOnChangeFields");
-const validation = require("./validation");
+const contactValidation = require("./contactValidation");
+const statusValidationSchema = require("./statusValidationSchema");
 
 module.exports = {
-  validation,
+  contactValidation,
   validationOnChangeFields,
+  statusValidationSchema,
 };

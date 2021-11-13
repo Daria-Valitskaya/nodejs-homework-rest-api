@@ -1,107 +1,31 @@
 const express = require("express");
-const { NotFound, BadRequest } = require("http-errors");
-const { validation, validationOnChangeFields } = require("../../joiValidation");
-
-const router = express.Router();
 
 const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContactById,
-} = require("../../models/contacts");
+  contactValidation,
+  validationOnChangeFields,
+  statusValidationSchema,
+} = require("../../joiValidation");
+const { validation } = require("../../middlewares");
+const router = express.Router();
+const { contactsControllers } = require("../../controllers");
 
-router.get("/", async (req, res, next) => {
-  try {
-    const result = await listContacts();
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/", contactsControllers.listContacts);
 
-router.get("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const result = await getContactById(contactId);
-    if (!result) {
-      throw new NotFound(`Contact ${contactId} not found`);
-    }
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/:contactId", contactsControllers.getContactById);
 
-router.post("/", async (req, res, next) => {
-  try {
-    const { error } = validation.validate(req.body);
-    if (error) {
-      throw new BadRequest(error.message);
-    }
-    const result = await addContact(req.body);
-    res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        result,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.post("/", validation(contactValidation), contactsControllers.addContact);
 
-router.delete("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const result = await removeContact(contactId);
-    if (!result) {
-      throw new NotFound(`Contact ${contactId} not found`);
-    }
-    res.json({
-      status: "success",
-      code: 200,
-      message: "contact deleted",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-router.put("/:contactId", async (req, res, next) => {
-  try {
-    const { error } = validationOnChangeFields.validate(req.body);
-    if (error) {
-      throw new BadRequest(error.message);
-    }
-    const { contactId } = req.params;
-    const result = await updateContactById(contactId, req.body);
-    if (!result) {
-      throw new NotFound(`Contact ${contactId} not found`);
-    }
-    res.status(201).json({
-      status: "success",
-      code: 200,
-      data: {
-        result,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete("/:contactId", contactsControllers.deleteContact);
 
+router.put(
+  "/:contactId",
+  validation(validationOnChangeFields),
+  contactsControllers.updateContactById
+);
+
+router.patch(
+  "/:contactId/favorite",
+  validation(statusValidationSchema),
+  contactsControllers.updateStatusContact
+);
 module.exports = router;
