@@ -3,6 +3,7 @@ const express = require("express");
 const {
   contactValidation,
   validationOnChangeFields,
+  statusValidationSchema,
 } = require("../../joiValidation");
 const { validation } = require("../../middlewares");
 const router = express.Router();
@@ -22,5 +23,9 @@ router.put(
   contactsControllers.updateContactById
 );
 
-router.patch("/:contactId/favorite", contactsControllers.updateStatusContact);
+router.patch(
+  "/:contactId/favorite",
+  validation(statusValidationSchema),
+  contactsControllers.updateStatusContact
+);
 module.exports = router;
