@@ -2,8 +2,9 @@ const { Contact } = require("../../models");
 const { NotFound } = require("http-errors");
 const updateContactById = async (req, res, next) => {
   try {
-    const { contactId } = req.params;
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    const id = req.user._id;
+    const contactId = req.params;
+    const result = await Contact.findOneAndUpdate({ contactId, id }, req.body, {
       new: true,
     });
     if (!result) {
