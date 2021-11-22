@@ -1,9 +1,13 @@
+const { BadRequest } = require("http-errors");
 const { Contact } = require("../../models");
 const listContacts = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const { page = 1, limit = 10 } = req.query;
     const { _id } = req.user;
-    const skip = page * limit - limit;
+    const skip = Number(page) * Number(limit) - Number(limit);
+    if (isNaN(page) || isNaN(limit)) {
+      throw new BadRequest();
+    }
     const result = await Contact.find(
       { owner: _id },
       "_id name phone email owner",
