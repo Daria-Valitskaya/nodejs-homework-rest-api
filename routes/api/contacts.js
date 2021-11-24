@@ -5,26 +5,33 @@ const {
   validationOnChangeFields,
   statusValidationSchema,
 } = require("../../joiValidation");
-const { validation } = require("../../middlewares");
+const { validation, authenticate } = require("../../middlewares");
 const router = express.Router();
 const { contactsControllers } = require("../../controllers");
 
-router.get("/", contactsControllers.listContacts);
+router.get("/", authenticate, contactsControllers.listContacts);
 
-router.get("/:contactId", contactsControllers.getContactById);
+router.get("/:contactId", authenticate, contactsControllers.getContactById);
 
-router.post("/", validation(contactValidation), contactsControllers.addContact);
+router.post(
+  "/",
+  authenticate,
+  validation(contactValidation),
+  contactsControllers.addContact
+);
 
-router.delete("/:contactId", contactsControllers.deleteContact);
+router.delete("/:contactId", authenticate, contactsControllers.deleteContact);
 
 router.put(
   "/:contactId",
+  authenticate,
   validation(validationOnChangeFields),
   contactsControllers.updateContactById
 );
 
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   validation(statusValidationSchema),
   contactsControllers.updateStatusContact
 );
