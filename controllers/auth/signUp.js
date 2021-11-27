@@ -10,7 +10,7 @@ const signUp = async (req, res, next) => {
       throw new Conflict(`Email ${email} in use`);
     }
 
-    const avatarURL = gravatar.url(email);
+    const avatarURL = gravatar.url(email, { protocol: "http" });
     const newUser = new User({ email, avatarURL });
     newUser.setPassword(password);
     newUser.save();
