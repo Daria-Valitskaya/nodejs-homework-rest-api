@@ -4,7 +4,7 @@ const { sendGridMail } = require("../../helpers");
 const repeatedVerify = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const { verificationToken } = req.params;
+
     if (!email) {
       throw new BadRequest("missing required field email");
     }
@@ -16,7 +16,7 @@ const repeatedVerify = async (req, res, next) => {
     if (user.verify) {
       throw new BadRequest("Verification has already been passed");
     }
-
+    const { verificationToken } = user.verificationToken;
     const repeatedMail = {
       to: email,
       subject: "Confirmation of registration",

@@ -7,8 +7,11 @@ const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user || !user.verify || !user.comparePassword(password)) {
+    if (!user || !user.comparePassword(password)) {
       throw new Unauthorized("Email or password is wrong");
+    }
+    if (!user.verify) {
+      throw new Unauthorized("Please verify your email");
     }
     const payload = {
       id: user._id,
