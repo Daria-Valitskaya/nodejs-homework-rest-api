@@ -16,7 +16,7 @@ const repeatedVerify = async (req, res, next) => {
     if (user.verify) {
       throw new BadRequest("Verification has already been passed");
     }
-    const { verificationToken } = user.verificationToken;
+    const { verificationToken } = user;
     const repeatedMail = {
       to: email,
       subject: "Confirmation of registration",
